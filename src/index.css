@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Nunito+Sans:wght@300;400;700&display=swap');
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    scroll-behavior: smooth;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  body {
+    background-color: #F9F9FA;
+    
+  }
+
+  .bottle{
+    background-image: url("./Assets/images/water-bottle.png");
+    background-repeat: no-repeat;
+    background-position:  bottom right;
+    background-size: contain;
+  }
+
+  @media screen  and (min-width: 960px) {
+   .bottle{
+    background-image: none;
+   } 
+  }
+
+  .welcome-bg{
+    background-image: url("./Assets/images/login-mb.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  @media screen and (min-width: 960px) {
+    .welcome-bg{
+      background-image: none;
+    }
+    .welcome-bg-lg{
+      background-image: url("./Assets/images/login-lg.png");
+      background-position: center center;
+      background-size: cover;
+    }
+  }
+
+  
+  .modal{
+    transition: all .3s ease-in-out;
+  }
+  
+  .modal.show{
+     opacity: 1;
+     pointer-events: visible;
+  }
+  
+  .modal-content{
+     transition: all .3s ease-in-out;
+     transform: translateY(-200px);
+  }
+  
+  .modal.show .modal-content{
+     transform: translateY(0);
+  }
+
+.custom-toast-error {
+  font-family: 'Nunito Sans', sans-serif;
+  background-color: #ff6464;
+  color: white;
+}
+
+.custom-toast-success {
+  font-family: 'Nunito Sans', sans-serif;
+  background-color: #64ff64;
+  color: white;
+}
+
+
+@keyframes clockwise-spin {
+  0% { transform: rotate(0deg);
+  scale: 1.0;
+  }
+  100% { transform: rotate(360deg); 
+  scale: 1.05;
+  }
+}
+
+@keyframes anticlockwise-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+.custom-spin {
+  animation: clockwise-spin 10s linear infinite alternate; /* Adjust the duration (5s) to control the speed */
+}

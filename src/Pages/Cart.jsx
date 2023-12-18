@@ -153,7 +153,7 @@ const Cart = () => {
         </div>
       </div>
       {cart && cart.items && cart.items.length > 0 && (
-        <div className="flex w-[85%] md:w-[540px] lg:w-[864px] mx-0 flex-col md:flex-row gap-[16px] md:gap-[32px] ">
+        <div className="hidden md:flex w-[85%] md:w-[540px] lg:w-[864px] mx-0 flex-col md:flex-row gap-[16px] md:gap-[32px] ">
           <div className="w-full">
             <Button
               type={"button"}

@@ -71,8 +71,6 @@ const UploadPage = () => {
       <Modal 
       price={price}
       quantity={quantity}
-      name={selectedProduct ? selectedProduct.name : ""}
-      imageUrl={selectedProduct ? selectedProduct.imageUrl : ""}
       selectedProps={selectedProps}
       productId={productId}
         onClose={toggleModal} 

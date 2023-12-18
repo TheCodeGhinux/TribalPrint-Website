@@ -16,12 +16,12 @@ const HeroLazyLoad = ({ src, alt }) => {
     <div className="custom-spin">
       {isLoading ? (
        <img src={artboardLazy} 
-       className={`ss:w-[550px]   md:w-full lg:w-[542px]`}
+       className={`w-[320px]  ss:w-[550px]   md:w-full lg:w-[542px]`}
        alt=""
        />
       ) : (
         <img src={src} alt={alt} 
-        className={`ss:w-[500px] md:w-full lg:w-[542px]`} />
+        className={` w-full ss:w-[500px] md:w-full lg:w-[542px]`} />
       )}
     </div>
   );

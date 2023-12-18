@@ -56,6 +56,11 @@ const Navbar = () => {
     );
   }, [location.pathname]);
 
+  const handleToggle = () => {
+    setToggle(false)
+    window.scrollTo(0, 0)
+  }
+
   return (
     <nav
       className={`${
@@ -63,7 +68,7 @@ const Navbar = () => {
       } w-full mx-auto fixed  top-0 z-20 `}
     >
       <div
-        className={`bg-topBg pt-[32px] xs:pt-[12px] pb-[9px]   ${styles.paddingX}  `}
+        className={`bg-topBg pt-[20px] xs:pt-[12px] pb-[9px]   ${styles.paddingX}  `}
       >
         <div
           className={`flex flex-col  xs:flex-row justify-end xs:items-center xs:gap-10  ${styles.boxWidth}`}
@@ -146,13 +151,15 @@ const Navbar = () => {
               ))}
             </ul>
             <div className="flex flex-row gap-[20px] ">
-              <NavLink to={"/cart"} className="sign relative">
+              <NavLink to={"/cart"} className="sign relative"
+              onClick={handleToggle}
+              >
                 <div className="absolute right-0 border bg-red rounded-full text-white  w-5 h-5 flex items-center justify-center ">
                   {cart && cart.items ? cart.items.length : 0}
                 </div>
                 <img src={cartIcon} alt="" className="md:w-[44px] lg:w-fit " />
               </NavLink>
-              <NavLink to={"/sign-in"} className="join">
+              <NavLink to={"/sign-in"} className="join" onClick={handleToggle}>
                 <img src={user} alt="" className="md:w-[44px] lg:w-fit " />
               </NavLink>
             </div>
@@ -163,7 +170,7 @@ const Navbar = () => {
                 src={closeDark}
                 alt=""
                 className="w-[36px] h-[36px] "
-                onClick={() => setToggle(false)}
+                onClick={handleToggle}
               />
             ) : (
               <img src={hamburger} alt="" onClick={() => setToggle(true)} />
@@ -173,20 +180,20 @@ const Navbar = () => {
       </div>
       {toggle && (
         <div
-          className={`fixed bg-white z-20 top-[160px] xs:top-[120px] ss:top-[135px] min-h-screen  w-full   md:hidden ${styles.paddingX}`}
+          className={`fixed bg-white z-20 top-[130px] xs:top-[120px] ss:top-[135px] min-h-screen  w-full   md:hidden ${styles.paddingX}`}
           style={{
             left: toggle ? "0px" : "-300px",
           }}
         >
           <div className="mt-[32px] flex flex-col justify-end items-end">
             <div className="flex flex-row w-fit gap-[20px]  ">
-              <NavLink to={"/cart"} className="sign relative">
+              <NavLink to={"/cart"} className="sign relative" onClick={() => {setToggle(false)}}>
                 <div className="absolute right-0 border bg-red rounded-full text-white  w-5 h-5 flex items-center justify-center ">
                   {cart && cart.items ? cart.items.length : 0}
                 </div>
                 <img src={cartIcon} alt="" className="md:w-[44px] lg:w-fit " />
               </NavLink>
-              <NavLink to={"/sign-in"} className="user">
+              <NavLink to={"/sign-in"} className="user" onClick={() => {setToggle(false)}}>
                 <img src={user} alt="" className="w-[40px] " />
               </NavLink>
             </div>

@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { FaSpinner } from "react-icons/fa";
 
 
-const Modal = ({onClose, show, quantity, name, imageUrl, selectedProps, productId, price}) => {
+const Modal = ({onClose, show, quantity, selectedProps, productId, price}) => {
   const modalContentRef = useRef(null);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -41,14 +41,28 @@ const Modal = ({onClose, show, quantity, name, imageUrl, selectedProps, productI
     e.preventDefault();
     try {
       setLoading(true);
+
+      // Fetch user's IP address
+      const ipResponse = await axios.get("https://api64.ipify.org?format=json");
+      const userIp = ipResponse.data.ip;
+      console.log(userIp)
+
+      // Make a post request with the user's IP address
       const baseUrl = "https://tribalprintengine.onrender.com/api/v1";
-      const endpoint = `${baseUrl}/carts/add`;
-      const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAwNjY2NjU5LCJleHAiOjM2MDAwMDE3MDA2NjY2NTl9.ZFE2O34gp4eVC5EYGXLA9AYu-mwSEdqggsaHQep3Em8`;
+      const cartEndpoint = `${baseUrl}/carts/create/guest`;
+      
+      const cartData = {
+        ip: userIp,
+      };
+
+      const cartResponse = await axios.post(cartEndpoint, cartData);
+
+      // Now, proceed to add the item to the cart
+      const endpoint = `${baseUrl}/carts/add/${userIp}`;
+      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAwNjY2NjU5LCJleHAiOjM2MDAwMDE3MDA2NjY2NTl9.ZFE2O34gp4eVC5EYGXLA9AYu-mwSEdqggsaHQep3Em8"; 
 
       const data = {
         product: productId,
-        imageUrl,
-        name,
         quantity: quantity,
         price: price,
         additionalProps: selectedProps,
@@ -59,22 +73,22 @@ const Modal = ({onClose, show, quantity, name, imageUrl, selectedProps, productI
           Authorization: `Bearer ${token}`,
         },
       });
-      if (response.status) {
+
+      if (response.status && cartResponse.status) {
         toast.success("Items added to cart successfully!", {
           className: "custom-toast-success",
         });
         onClose()
+        navigate("/cart");
       }
-      navigate("/cart");
     } catch (error) {
       toast.error("Failed to add items to cart. Please try again.", {
         className: "custom-toast-error",
       });
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
-
   const handleFileUpload = (event) => {
     const files = event.target.files;
 

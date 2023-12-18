@@ -68,7 +68,7 @@ const CartItem = ({
     <section>
       <div className=" flex xs:w-[400px] md:w-full flex-col lg:flex-row justify-between">
         <div
-          className={` mb-[43px] bg-[#F2F2F2] lg:w-[600px] xl:w-full md:w-full md:px-6 lg:justify-start ${layout.section1} flex flex-col  gap-[48px] md:py-6 md:gap-5  `}
+          className={` mb-[43px] bg-[#F2F2F2] lg:w-[600px] xl:w-full md:w-full md:px-6 lg:justify-start ${layout.section1} flex flex-col px-3  gap-[48px] md:py-6 md:gap-5  `}
         >
           <div className="w-fit lg:m-0  mx-auto ">
             <img

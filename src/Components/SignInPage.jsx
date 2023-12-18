@@ -42,7 +42,7 @@ import {
                 </p>
               </div>
               <div className="">
-                <p className="font-nunito text-[14px] text-[#fff] leading-[18px] mb-[4px] md:mb-[12px] text-[16px] ss:mb-[8px]  ">
+                <p className="font-nunito  text-[#fff] leading-[18px] mb-[4px] md:mb-[12px] text-[16px] ss:mb-[8px]  ">
                   Keep in touch
                 </p>
                 <div className="flex flex-row gap-[16px] text-white b ">

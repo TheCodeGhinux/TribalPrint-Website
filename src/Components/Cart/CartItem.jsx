@@ -3,35 +3,53 @@ import styles, { layout } from "../../style";
 import { Button } from "../../Utils";
 import { addIcon, checkMark, flexBannerLg, subtractIcon } from "../../Assets";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { FaSpinner } from "react-icons/fa";
 
 const CartItem = ({
   quantity,
-  cardId,
   name,
   imageUrl,
   price,
   additionalProps,
   setCart,
+  cartId
 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [userIp, setUserIp] = useState(null);
 
-  const handleDelete = async (cardId) => {
+  useEffect(() => {
+    const fetchUserIp = async () => {
+      try {
+        const ipResponse = await axios.get("https://api64.ipify.org?format=json");
+        const fetchedUserIp = ipResponse.data.ip;
+        console.log(fetchedUserIp);
+        setUserIp(fetchedUserIp); 
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    // Fetch the user's IP when the component mounts
+    fetchUserIp();
+  }, []);
+
+  const handleDelete = async () => {
     try {
       setLoading(true);
+      if (!userIp) {
+        throw new Error("User IP not available");
+      }
 
-      const baseUrl = `https://tribalprintengine.onrender.com/api/v1/carts/remove/${cardId}`;
+      const baseUrl = `https://tribalprintengine.onrender.com/api/v1/carts/remove/${userIp}`;
       const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAyNzIwMjEzLCJleHAiOjM2MDAwMDE3MDI3MjAyMTN9.RAFjVE_WdKjS9GqkK6Gtt75T9K6GvWki_DOwVHhHXX8`;
 
-      const response = await axios.patch(baseUrl, null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const itemIds = [cartId];
+
+      const response = await axios.patch(baseUrl, { itemIds });
 
       console.log(token);
       if (response.status < 200 || response.status >= 300) {
@@ -42,12 +60,7 @@ const CartItem = ({
 
       // Fetch updated cart data after deletion
       const updatedCartResponse = await axios.get(
-        "https://tribalprintengine.onrender.com/api/v1/carts/get",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `https://tribalprintengine.onrender.com/api/v1/carts/get/${userIp}`
       );
 
       if (updatedCartResponse.status < 200 || updatedCartResponse.status >= 300) {
@@ -90,7 +103,7 @@ const CartItem = ({
               </h2>
               <button
                 className="text-[#E30613] w-14 flex items-end justify-end "
-                onClick={() => handleDelete(cardId)}
+                onClick={handleDelete}
                 disabled={loading}
               >
                 {loading ? (

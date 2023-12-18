@@ -1,8 +1,6 @@
-import { Suspense, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { filter, search } from "../../Assets";
 import {
-  AllProductDetails,
-  ProductDetails,
   ServiceItems,
 } from "../../Constants";
 import styles from "../../style";
@@ -14,18 +12,14 @@ const Products = () => {
   const [categories, setCategories] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
-
+  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const baseUrl = `https://tribalprintengine.onrender.com/api/v1/categories`;
-        const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAwNjY2NjU5LCJleHAiOjM2MDAwMDE3MDA2NjY2NTl9.ZFE2O34gp4eVC5EYGXLA9AYu-mwSEdqggsaHQep3Em8`;
         const response = await axios.get(baseUrl, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           params: {
-            search: searchTerm, // Include search term in params
+            search: searchTerm
           },
         });
 
@@ -57,7 +51,7 @@ const Products = () => {
       className={`${styles.boxWidth}  mt-[50px] mb-[300px] md:mb-[350px]  ${styles.padding3}`}
     >
       <div className=" flex flex-col md:flex-row gap-[28px] md:gap-5 lg:gap-[32px] lg:justify-between ">
-        <div className="filter-services  mb-[80px] md:w-2/5  lg:w-1/3 ">
+        <div className="filter-services  mb-[80px] md:w-2/5 lg:w-1/3 ">
           <FilterContainer
             setSearchTerm={setSearchTerm}
             searchTerm={searchTerm}

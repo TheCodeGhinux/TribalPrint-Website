@@ -9,7 +9,7 @@ const Hero = () => {
             >
                 <div className="flex flex-row  md:flex-row items-center   md:justify-between">
                     <div className=" ">
-                        <h2 className={` text-white md:text-black ${styles.heading2}`} >Product catalogue</h2>
+                        <h2 className={` text-white md:text-black ${styles.heading2}`} >Product Catalogue</h2>
                         <p className="font-nunito text-[16px] text-white md:text-black leading-[24px] font-normal ">All products</p>
                     </div>
                     <div className="image hidden md:block">

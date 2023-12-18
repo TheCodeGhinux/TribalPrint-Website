@@ -116,7 +116,7 @@ const CheckOutPage = () => {
                     key={item._id}
                     className="flex items-center md:text-[18px] justify-between "
                   >
-                    <span>{`${index + 1}. ${item.description.name}`}</span>
+                    <span>{`${index + 1}. ${item.description?.name || ""}`}</span>
                     <span>₦{item.lineTotal}</span>
                   </p>
                 ))}

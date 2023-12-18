@@ -1,10 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
-  addIcon,
   cartImage,
-  checkMark,
-  flexBannerLg,
-  subtractIcon,
 } from "../Assets";
 import styles, { layout } from "../style";
 import { Button } from "../Utils";
@@ -21,17 +17,28 @@ const Cart = () => {
   const { checkoutId } = useParams();
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
+  const [userIp, setUserIp] = useState(null);
 
   useEffect(() => {
+
+    const fetchUserIp = async () => {
+      try {
+        const ipResponse = await axios.get("https://api64.ipify.org?format=json");
+        const fetchedUserIp = ipResponse.data.ip;
+        console.log(fetchedUserIp);
+        setUserIp(fetchedUserIp); 
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    fetchUserIp();
+
     const fetchCart = async () => {
       try {
-        const baseUrl = `https://tribalprintengine.onrender.com/api/v1/carts/get`;
-        const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAyNzIwMjEzLCJleHAiOjM2MDAwMDE3MDI3MjAyMTN9.RAFjVE_WdKjS9GqkK6Gtt75T9K6GvWki_DOwVHhHXX8`;
-        const response = await axios.get(baseUrl, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        if (!userIp) return;
+        const baseUrl = `https://tribalprintengine.onrender.com/api/v1/carts/get/${userIp}`;
+        const response = await axios.get(baseUrl);
 
         if (response.status < 200 || response.status >= 300) {
           throw new Error(
@@ -48,7 +55,7 @@ const Cart = () => {
     if (!cart) {
       fetchCart();
     }
-  }, [cart]);
+  }, [cart, userIp]);
 
   const calculateTotal = () => {
     let totalPrice = 0;
@@ -112,7 +119,7 @@ const Cart = () => {
             cart.items.map((cartt) => (
               <CartItem
                 key={cartt._id}
-                cardId={cartt._id}
+                cartId={cartt._id}
                 quantity={cartt.quantity}
                 price={cartt.price}
                 name={cartt.product ? cartt.product.name : ""}

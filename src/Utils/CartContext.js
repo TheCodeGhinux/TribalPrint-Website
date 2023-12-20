@@ -45,6 +45,7 @@ export const CartProvider = ({ children }) => {
         if (!userIp) return;
         const baseUrl = `https://tribalprintengine.onrender.com/api/v1/carts/get/${userIp}`;
         const response = await axios.get(baseUrl);
+        console.log('bro', baseUrl)
   
         if (response.status < 200 || response.status >= 300) {
           throw new Error(`Failed to fetch cart data: ${response.statusText}`);

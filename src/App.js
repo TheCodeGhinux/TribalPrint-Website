@@ -18,15 +18,36 @@ import UploadProduct from "./Pages/UploadProduct";
 import { useEffect, useState } from "react";
 import Preloader from "./Components/PreLoader/PreLoader";
 import { Toaster } from "react-hot-toast";
+import axios from "axios";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000);
+    // Simulating an API call
+    const createGuestCart = async () => {
+      try {
+         const baseUrl = `https://tribalprintengine.onrender.com/api/v1/carts/create/guest`;
+        const response = await axios.get(baseUrl, {
+        });
+
+        // Handle the response accordingly
+        console.log("Guest Cart Created:", response.data);
+      } catch (error) {
+        console.error("Error creating guest cart:", error.message);
+      }
+
+      // Simulating a delay
+      setTimeout(() => {
+        setLoading(false);
+      }, 3000);
+    };
+
+    // Call the function to create guest cart
+    createGuestCart();
   }, []);
+
+  
 
   return (
     <>

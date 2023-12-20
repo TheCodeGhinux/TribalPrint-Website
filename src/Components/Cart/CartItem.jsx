@@ -156,21 +156,11 @@ const CartItem = ({
               )}
             </div>
             <hr className="border-t border-t-[#BDBDBD]  " />
-            <div className="flex flex-col gap-2">
+            <div className="flex  items-center gap-2">
               <h2 className={`${styles.heading4} leading-none`}>Quantity:</h2>
-              <div className="flex flex-row items-center w-[280px] md:w-full justify-between">
-                <div className="border border-[#213B6F]">
-                  <p className=" text-black  w-[170px] flex flex-row items-center justify-between gap-2  px-[16px] py-[8px] ">
-                    <button className="font-nunito text-skyBlueText">
-                      <img src={subtractIcon} alt="" />
-                    </button>
-                    <span>{quantity}</span>
-                    <button>
-                      <img src={addIcon} alt="" />
-                    </button>
+              <p className=" text-black font-semibold text-[20px] ">
+                    {quantity}
                   </p>
-                </div>
-              </div>
             </div>
           </div>
         </div>

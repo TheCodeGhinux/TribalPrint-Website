@@ -23,17 +23,15 @@ import axios from "axios";
 const App = () => {
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
-    // Simulating an API call
     const createGuestCart = async () => {
       try {
         const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/create/guest`;
         const response = await axios.get(baseUrl);
 
-        // Extract relevant data from the response
         const { user, _id, visitorId } = response.data;
 
-        // Save data to localStorage
         localStorage.setItem("user", user);
         localStorage.setItem("_id", _id);
         localStorage.setItem("visitorId", visitorId);
@@ -43,7 +41,6 @@ const App = () => {
         console.error("Error creating guest cart:", error.message);
       }
 
-      // Simulating a delay
       setTimeout(() => {
         setLoading(false);
       }, 3000);
@@ -51,7 +48,6 @@ const App = () => {
 
     createGuestCart();
   }, []);
-
   
 
   return (

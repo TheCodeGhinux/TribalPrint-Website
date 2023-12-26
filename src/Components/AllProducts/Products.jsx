@@ -16,7 +16,7 @@ const Products = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const baseUrl = `https://tribalprintengine.onrender.com/api/v1/categories`;
+        const baseUrl = `https://tp-prod.onrender.com/api/v1/categories`;
         const response = await axios.get(baseUrl, {
           params: {
             search: searchTerm

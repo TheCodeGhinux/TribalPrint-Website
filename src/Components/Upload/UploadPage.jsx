@@ -30,7 +30,7 @@ const UploadPage = () => {
   useEffect(() => {
     const fetchSingleProduct = async () => {
       try {
-        const baseUrl = `https://tribalprintengine.onrender.com/api/v1/categories/${id}`;
+        const baseUrl = `https://tp-prod.onrender.com/api/v1/categories/${id}`;
         const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAwNjY2NjU5LCJleHAiOjM2MDAwMDE3MDA2NjY2NTl9.ZFE2O34gp4eVC5EYGXLA9AYu-mwSEdqggsaHQep3Em8`;
         const response = await axios.get(baseUrl, {
           headers: {

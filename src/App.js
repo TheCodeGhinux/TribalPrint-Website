@@ -27,11 +27,17 @@ const App = () => {
     // Simulating an API call
     const createGuestCart = async () => {
       try {
-         const baseUrl = `https://tribalprintengine.onrender.com/api/v1/carts/create/guest`;
-        const response = await axios.get(baseUrl, {
-        });
+        const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/create/guest`;
+        const response = await axios.get(baseUrl);
 
-        // Handle the response accordingly
+        // Extract relevant data from the response
+        const { user, _id, visitorId } = response.data;
+
+        // Save data to localStorage
+        localStorage.setItem("user", user);
+        localStorage.setItem("_id", _id);
+        localStorage.setItem("visitorId", visitorId);
+
         console.log("Guest Cart Created:", response.data);
       } catch (error) {
         console.error("Error creating guest cart:", error.message);
@@ -43,7 +49,6 @@ const App = () => {
       }, 3000);
     };
 
-    // Call the function to create guest cart
     createGuestCart();
   }, []);
 

@@ -43,7 +43,7 @@ export const CartProvider = ({ children }) => {
     const fetchCart = async () => {
       try {
         if (!userIp) return;
-        const baseUrl = `https://tribalprintengine.onrender.com/api/v1/carts/get/${userIp}`;
+        const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/get/${userIp}`;
         const response = await axios.get(baseUrl);
         console.log('bro', baseUrl)
   

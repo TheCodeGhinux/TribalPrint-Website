@@ -37,77 +37,95 @@ const Modal = ({onClose, show, quantity, selectedProps, productId, price}) => {
     [onClose]
   );
 
-  const handleCart = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-
-      // Fetch user's IP address
-      const ipResponse = await axios.get("https://api64.ipify.org?format=json");
-      const userIp = ipResponse.data.ip;
-      console.log(userIp)
-
-      // Make a post request with the user's IP address
-      const baseUrl = "https://tribalprintengine.onrender.com/api/v1";
-      const cartEndpoint = `${baseUrl}/carts/create/guest`;
-      
-      const cartData = {
-        ip: userIp,
-      };
-
-      const cartResponse = await axios.post(cartEndpoint, cartData);
-
-      // Now, proceed to add the item to the cart
-      const endpoint = `${baseUrl}/carts/add/${userIp}`;
-      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAwNjY2NjU5LCJleHAiOjM2MDAwMDE3MDA2NjY2NTl9.ZFE2O34gp4eVC5EYGXLA9AYu-mwSEdqggsaHQep3Em8"; 
-
-      const data = {
-        product: productId,
-        quantity: quantity,
-        price: price,
-        additionalProps: selectedProps,
-      }
-
-      const response = await axios.patch(endpoint, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.status && cartResponse.status) {
-        toast.success("Items added to cart successfully!", {
-          className: "custom-toast-success",
-        });
-        onClose()
-        navigate("/cart");
-      }
-    } catch (error) {
-      toast.error("Failed to add items to cart. Please try again.", {
-        className: "custom-toast-error",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-  const handleFileUpload = (event) => {
+  const handleFileUpload = async (event) => {
     const files = event.target.files;
-
+  
     if (files.length > 0) {
       const validFiles = Array.from(files).filter(isValidFile);
-
+  
       if (validFiles.length > 0) {
-        setUploadedFiles([...uploadedFiles, ...validFiles]);
-        toast.success("Files successfully uploaded.", {
-          className: "custom-toast-success",
-        });
+        try {
+          const baseUrl = `https://tp-prod.onrender.com/api/v1`;
+          const designUploadEndpoint = `${baseUrl}/design/upload`;
+          const formData = new FormData();
+          formData.append("design", validFiles[0]);
+  
+          const uploadResponse = await axios.post(designUploadEndpoint, formData);
+  
+          if (!uploadResponse.data.designUrl) {
+            throw new Error("Failed to upload design");
+          }
+  
+          // Set the uploaded file for display
+          setUploadedFiles([{ name: validFiles[0].name, designUrl: uploadResponse.data.designUrl }]);
+          toast.success("File successfully uploaded.", {
+            className: "custom-toast-success",
+          });
+        } catch (error) {
+          console.error("Failed to upload design:", error.message);
+          toast.error("Failed to upload design. Please try again.", {
+            className: "custom-toast-error",
+          });
+        }
       } else {
-        // Display an error toast for invalid files
         toast.error("Invalid file format. Please upload valid format files.", {
           className: "custom-toast-error",
         });
       }
     }
   };
+  
+
+const handleCart = async (e) => {
+  e.preventDefault();
+  try {
+    setLoading(true);
+
+    const designUrl = uploadedFiles[0]?.designUrl;
+
+    if (!designUrl) {
+      throw new Error("Design URL not found");
+    }
+
+    const baseUrl = `https://tp-prod.onrender.com/api/v1`;
+
+    // Retrieve visitorId from localStorage
+    const user = localStorage.getItem("user");
+    console.log(user)
+
+    if (!user) {
+      throw new Error("user is null or undefined");
+    }
+
+    const cartEndpoint = `${baseUrl}/carts/add/${user}`;
+
+    const data = {
+      product: productId,
+      quantity: quantity,
+      price: price,
+      files: [designUrl],
+      additionalProps: selectedProps,
+    };
+
+    const response = await axios.patch(cartEndpoint, data);
+
+    if (response.status) {
+      toast.success("Items added to cart successfully!", {
+        className: "custom-toast-success",
+      });
+      onClose();
+      navigate("/cart");
+    }
+  } catch (error) {
+    console.error("Failed to add items to cart:", error.message);
+    toast.error("Failed to add items to cart. Please try again.", {
+      className: "custom-toast-error",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const isValidFile = (file) => {
     const allowedTypes = [

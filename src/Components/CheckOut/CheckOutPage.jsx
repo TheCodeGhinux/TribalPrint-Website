@@ -11,7 +11,7 @@ const CheckOutPage = () => {
   useEffect(() => {
     const fetchCheckoutDetails = async () => {
       try {
-        const baseUrl = `https://tribalprintengine.onrender.com/api/v1/carts/orders/get/${checkoutId}`;
+        const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/orders/get/${checkoutId}`;
         const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAyNzIwMjEzLCJleHAiOjM2MDAwMDE3MDI3MjAyMTN9.RAFjVE_WdKjS9GqkK6Gtt75T9K6GvWki_DOwVHhHXX8`;
 
         const response = await axios.get(baseUrl, {

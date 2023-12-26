@@ -44,7 +44,7 @@ const CartItem = ({
         throw new Error("User IP not available");
       }
 
-      const baseUrl = `https://tribalprintengine.onrender.com/api/v1/carts/remove/${userIp}`;
+      const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/remove/${userIp}`;
       const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAyNzIwMjEzLCJleHAiOjM2MDAwMDE3MDI3MjAyMTN9.RAFjVE_WdKjS9GqkK6Gtt75T9K6GvWki_DOwVHhHXX8`;
 
       const itemIds = [cartId];
@@ -60,7 +60,7 @@ const CartItem = ({
 
       // Fetch updated cart data after deletion
       const updatedCartResponse = await axios.get(
-        `https://tribalprintengine.onrender.com/api/v1/carts/get/${userIp}`
+        `https://tp-prod.onrender.com/api/v1/carts/get/${userIp}`
       );
 
       if (updatedCartResponse.status < 200 || updatedCartResponse.status >= 300) {

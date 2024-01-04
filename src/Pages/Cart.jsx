@@ -1,7 +1,5 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import {
-  cartImage,
-} from "../Assets";
+import { cartImage } from "../Assets";
 import styles, { layout } from "../style";
 import { Button } from "../Utils";
 import { useEffect, useState } from "react";
@@ -14,32 +12,20 @@ const Cart = () => {
   const [cart, setCart] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { checkoutId } = useParams();
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
-  const [userIp, setUserIp] = useState(null);
 
   useEffect(() => {
-
-    const fetchUserIp = async () => {
-      try {
-        const ipResponse = await axios.get("https://api64.ipify.org?format=json");
-        const fetchedUserIp = ipResponse.data.ip;
-        console.log(fetchedUserIp);
-        setUserIp(fetchedUserIp); 
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-
-    fetchUserIp();
-
     const fetchCart = async () => {
       try {
-        if (!userIp) return;
-        const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/get/${userIp}`;
+        const userId = localStorage.getItem("user");
+
+        if (!userId) {
+          throw new Error("user is null or undefined");
+        }
+        const baseUrl = `/api/v1/carts/get/${userId}`;
         const response = await axios.get(baseUrl);
-        console.log(baseUrl)
+        console.log(baseUrl);
 
         if (response.status < 200 || response.status >= 300) {
           throw new Error(
@@ -56,7 +42,7 @@ const Cart = () => {
     if (!cart) {
       fetchCart();
     }
-  }, [cart, userIp]);
+  }, [cart]);
 
   const calculateTotal = () => {
     let totalPrice = 0;
@@ -148,33 +134,38 @@ const Cart = () => {
           )}
         </div>
         <div className="w-full flex justify-center md:justify-end md:w-2/4">
-        {cart && cart.items && cart.items.length > 0 && (
-          <div className="w-full ">
-            <TotalCart
-              handleCheckout={handleCheckout}
-              price={totalPrice}
-              product={totalProducts}
-              loading={loading}
-            />
-          </div>
-        )}
+          {cart && cart.items && cart.items.length > 0 && (
+            <div className="w-full ">
+              <TotalCart
+                handleCheckout={handleCheckout}
+                price={totalPrice}
+                product={totalProducts}
+                loading={loading}
+              />
+            </div>
+          )}
         </div>
       </div>
       {cart && cart.items && cart.items.length > 0 && (
         <div className="hidden md:flex w-[85%] md:w-[540px] lg:w-[864px] mx-0 flex-col md:flex-row gap-[16px] md:gap-[32px] ">
           <div className="w-full">
-            <Button
-              type={"button"}
-              classname={`bg-skyBlueText flex items-center justify-center py-[16px] rounded-[4px] text-white w-full ${styles.image} `}
-              title={
-                loading2 ? (
-                  <FaSpinner className="text-white animate-spin  " size={20} />
-                ) : (
-                  "Checkout Now"
-                )
-              }
-              onClick={handleCheckout}
-            />
+            <Link to={"/checkout"}>
+              <Button
+                type={"button"}
+                classname={`bg-skyBlueText flex items-center justify-center py-[16px] rounded-[4px] text-white w-full ${styles.image} `}
+                title={
+                  loading2 ? (
+                    <FaSpinner
+                      className="text-white animate-spin  "
+                      size={20}
+                    />
+                  ) : (
+                    "Checkout Now"
+                  )
+                }
+                // onClick={handleCheckout}
+              />
+            </Link>
           </div>
           <div className="w-full">
             <Link to={"/all-products"}>

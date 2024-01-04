@@ -1,49 +1,130 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button } from "../../Utils";
 import styles from "../../style";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { FaSpinner } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 const CheckOutPage = () => {
   const { checkoutId } = useParams();
   const [checkoutDetails, setCheckoutDetails] = useState(null);
+  const [error, setError] = useState(null);
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchCheckoutDetails = async () => {
-      try {
-        const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/orders/get/${checkoutId}`;
-        const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAyNzIwMjEzLCJleHAiOjM2MDAwMDE3MDI3MjAyMTN9.RAFjVE_WdKjS9GqkK6Gtt75T9K6GvWki_DOwVHhHXX8`;
+  // useEffect(() => {
+  //   const fetchCheckoutDetails = async () => {
+  //     try {
+  //       const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/orders/get/${checkoutId}`;
+  //       const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAyNzIwMjEzLCJleHAiOjM2MDAwMDE3MDI3MjAyMTN9.RAFjVE_WdKjS9GqkK6Gtt75T9K6GvWki_DOwVHhHXX8`;
 
-        const response = await axios.get(baseUrl, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  //       const response = await axios.get(baseUrl, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
 
-        if (response.status < 200 || response.status >= 300) {
-          throw new Error(
-            `Failed to fetch checkout details: ${response.statusText}`
-          );
-        }
+  //       if (response.status < 200 || response.status >= 300) {
+  //         throw new Error(
+  //           `Failed to fetch checkout details: ${response.statusText}`
+  //         );
+  //       }
 
-        setCheckoutDetails(response.data);
-      } catch (error) {
-        console.error(error.message);
-        // Handle error if needed
+  //       setCheckoutDetails(response.data);
+  //     } catch (error) {
+  //       console.error(error.message);
+  //       // Handle error if needed
+  //     }
+  //   };
+
+  //   fetchCheckoutDetails();
+  // }, [checkoutId]);
+
+  const handleCheckout = async () => {
+    try {
+      const userId = localStorage.getItem("user");
+     
+      if (!userId) {
+        throw new Error("user is null or undefined");
       }
-    };
+      const baseUrl = `/api/v1/carts/orders/create/${userId}/new`;
+      const response = await axios.post(baseUrl, null);
 
-    fetchCheckoutDetails();
-  }, [checkoutId]);
+      if (response.status < 200 || response.status >= 300) {
+        throw new Error(`Failed to create order: ${response.statusText}`);
+      }
+
+      toast.success("Order created successfully!");
+      const checkoutId = response.data._id;
+      // setCart(null);
+      // navigate(`/checkout/${checkoutId}`);
+    } catch (error) {
+      setError(error.message || "Error creating order");
+      console.error(error.message);
+      toast.error(error.message);
+    } finally {
+    }
+  };
+
+  const createUser = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      if (!firstName || !lastName || !email || !phone) {
+        toast.error("Please fill in all required fields");
+        return;
+      }
+  
+      const baseUrl = "/api/v1";
+      const endpoint = `${baseUrl}/users/create/guest`;
+  
+      const data = {
+        firstName,
+        lastName,
+        phone,
+        email,
+      };
+  
+      const response = await axios.post(endpoint, data);
+  
+      if (response.status === 201) {
+        toast.success('User created successfully!');
+        // Clear input fields on successful submission
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setPhone('');
+        navigate(`/order`);
+
+      } else {
+        // Extract error message from the response
+        const errorMessage = response.data.error || "Error creating User.";
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      console.error("Failed to add items to cart:", error.message);
+      // Display a generic error message
+      toast.error("Error creating User.");
+    } finally {
+      setLoading(false);
+    }
+  }
+  
+  
 
   return (
     <div className="mt-[170px]">
       <div className={`${styles.boxWidth}  ${styles.paddingX} `}>
         <h1 className={`${styles.heading1} mb-[46px] md:mb-[64px]`}>
-          Check Out
+  tex        Check Out
         </h1>
         <div className="flex flex-col md:flex-row md:gap-[32px]  ">
-          <form className="w-full">
+          <form className="w-full" onSubmit={createUser}>
             <div className="p-[24px]  flex flex-col gap-[24px] ">
               <h3 className="text-black text-[18px] md:text-[24px] font-semibold font-monteserrat ">
                 Customer Information
@@ -52,7 +133,8 @@ const CheckOutPage = () => {
                 <div className="w-full">
                   <input
                     type="text"
-                    required
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
                     className="w-full outline-none border border-gray p-[16px] rounded-[4px] "
                     placeholder="First Name"
                   />
@@ -60,7 +142,8 @@ const CheckOutPage = () => {
                 <div className="w-full">
                   <input
                     type="text"
-                    required
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
                     className="w-full outline-none border border-gray p-[16px] rounded-[4px] "
                     placeholder="Last Name"
                   />
@@ -70,7 +153,8 @@ const CheckOutPage = () => {
                 <div className="w-full">
                   <input
                     type="email"
-                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full outline-none border border-gray p-[16px] rounded-[4px] "
                     placeholder="Email"
                   />
@@ -78,7 +162,8 @@ const CheckOutPage = () => {
                 <div className="w-full">
                   <input
                     type="tel"
-                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                     className="w-full outline-none border border-gray p-[16px] rounded-[4px] "
                     placeholder="Phone Number"
                   />
@@ -93,16 +178,22 @@ const CheckOutPage = () => {
                   }
                 />
                 <Button
-                  title={"Proceed"}
+                 title={
+                  loading ? (
+                    <FaSpinner className="text-white animate-spin" size={30} />
+                  ) : (
+                    "Proceed"
+                  )
+                }
                   type={"submit"}
                   classname={
-                    " text-white font-nunito bg-lightGreen py-[16px] px-[24px] rounded-[4px] w-full "
+                    " text-white font-nunito bg-lightGreen py-[16px] px-[24px] rounded-[4px] w-full flex items-center justify-center "
                   }
                 />
               </div>
             </div>
           </form>
-          <div className="md:w-3/4 lg:w-[526px]">
+          <div className="md:w-3/4 lg:w-[526px] invisible ">
             {checkoutDetails && (
               <div className="order-summary mb-[32px]  bg-[#F2F2F2] flex flex-col gap-[24px] p-[24px] ">
                 <h3 className="font-monteserrat text-[18px] md:text-[24px] font-semibold flex items-center justify-between ">
@@ -139,7 +230,7 @@ const CheckOutPage = () => {
                 />
               </div>
             )}
-            <div className="instructions p-[24px]  bg-[#FFD4E6] ">
+            <div className="instructions p-[24px] hidden bg-[#FFD4E6] ">
               <p className="font-normal text-[18pxs] ">
                 Hey customer, <br /> your order will be ready in 3 – 5 working
                 days from today and will be fulfilled, through the method you

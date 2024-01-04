@@ -23,32 +23,39 @@ import axios from "axios";
 const App = () => {
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     const createGuestCart = async () => {
       try {
-        const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/create/guest`;
-        const response = await axios.get(baseUrl);
-
+        const baseUrl = "/api/v1/carts/create/guest";
+        const response = await axios.get(baseUrl, { withCredentials: true });
+    
+        // Extract and save the cookie from the response headers
+        const cookieHeader = response.headers["set-cookie"];
+        if (cookieHeader) {
+          const [cookie] = cookieHeader.split(";");
+          localStorage.setItem("guestCartCookie", cookie);
+        }
+    
+        console.log("Full Response:", response);
+    
         const { user, _id, visitorId } = response.data;
-
         localStorage.setItem("user", user);
         localStorage.setItem("_id", _id);
         localStorage.setItem("visitorId", visitorId);
-
+    
         console.log("Guest Cart Created:", response.data);
       } catch (error) {
         console.error("Error creating guest cart:", error.message);
       }
-
+    
       setTimeout(() => {
         setLoading(false);
       }, 3000);
     };
+    
 
     createGuestCart();
   }, []);
-  
 
   return (
     <>
@@ -56,7 +63,7 @@ const App = () => {
         <Preloader />
       ) : (
         <>
-        <Toaster />
+          <Toaster />
           <BrowserRouter>
             <Header />
             <Routes>
@@ -76,13 +83,10 @@ const App = () => {
                 element={<UploadProduct />}
               />
               <Route
-                path="/all-products/banner/order"
+                path="/order"
                 element={<OrderDetail />}
               />
-              <Route
-                path="/checkout/:checkoutId"
-                element={<CheckOut />}
-              />
+              <Route path="/checkout" element={<CheckOut />} />
             </Routes>
             <Footer />
             <ScrollToTop />

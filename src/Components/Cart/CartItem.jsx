@@ -19,48 +19,29 @@ const CartItem = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [userIp, setUserIp] = useState(null);
-
-  useEffect(() => {
-    const fetchUserIp = async () => {
-      try {
-        const ipResponse = await axios.get("https://api64.ipify.org?format=json");
-        const fetchedUserIp = ipResponse.data.ip;
-        console.log(fetchedUserIp);
-        setUserIp(fetchedUserIp); 
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-
-    // Fetch the user's IP when the component mounts
-    fetchUserIp();
-  }, []);
 
   const handleDelete = async () => {
     try {
       setLoading(true);
-      if (!userIp) {
-        throw new Error("User IP not available");
-      }
-
-      const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/remove/${userIp}`;
-      const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAyNzIwMjEzLCJleHAiOjM2MDAwMDE3MDI3MjAyMTN9.RAFjVE_WdKjS9GqkK6Gtt75T9K6GvWki_DOwVHhHXX8`;
+      const baseUrl = `/api/v1/carts/guest/remove`;
 
       const itemIds = [cartId];
 
       const response = await axios.patch(baseUrl, { itemIds });
-
-      console.log(token);
       if (response.status < 200 || response.status >= 300) {
         throw new Error(`Failed to remove item: ${response.statusText}`);
       }
 
       toast.success("Item removed successfully!");
 
+      const userId = localStorage.getItem("user");
+     
+      if (!userId) {
+        throw new Error("user is null or undefined");
+      }
       // Fetch updated cart data after deletion
       const updatedCartResponse = await axios.get(
-        `https://tp-prod.onrender.com/api/v1/carts/get/${userIp}`
+        `/api/v1/carts/get/${userId}`
       );
 
       if (updatedCartResponse.status < 200 || updatedCartResponse.status >= 300) {

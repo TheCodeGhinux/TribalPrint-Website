@@ -14,38 +14,15 @@ export const CartProvider = ({ children }) => {
 
   // Fetch user's IP and set it in localStorage
   useEffect(() => {
-    const fetchUserIp = async () => {
-      try {
-        const ipResponse = await axios.get("https://api64.ipify.org?format=json");
-        const fetchedUserIp = ipResponse.data.ip;
-        console.log(fetchedUserIp);
-        setUserIp(fetchedUserIp); // Set userIp here
-
-        // Save userIp in localStorage
-        localStorage.setItem("userIp", fetchedUserIp);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-
-    // Check if userIp is already in localStorage
-    const storedUserIp = localStorage.getItem("userIp");
-    if (storedUserIp) {
-      setUserIp(storedUserIp);
-    } else {
-      // If not, fetch it
-      fetchUserIp();
-    }
-  }, []);
-
-  // Fetch cart data using userIp and set it in localStorage
-  useEffect(() => {
     const fetchCart = async () => {
       try {
-        if (!userIp) return;
-        const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/get/${userIp}`;
+        const userId = localStorage.getItem("user");
+
+        if (!userId) {
+          throw new Error("user is null or undefined");
+        }
+        const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/get/${userId}`;
         const response = await axios.get(baseUrl);
-        console.log('bro', baseUrl)
   
         if (response.status < 200 || response.status >= 300) {
           throw new Error(`Failed to fetch cart data: ${response.statusText}`);
@@ -64,7 +41,7 @@ export const CartProvider = ({ children }) => {
   
     // Fetch cart data when userIp changes
     fetchCart();
-  }, [userIp]);  // Only depend on userIp, not cart
+  }, []);  // Only depend on userIp, not cart
   
 
   return (

@@ -16,13 +16,8 @@ const BannerDetails = () => {
   useEffect(() => {
     const fetchProductsByCategory = async () => {
       try {
-        const baseUrl = `https://tp-prod.onrender.com/api/v1/categories/${id}`;
-        const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAwNjY2NjU5LCJleHAiOjM2MDAwMDE3MDA2NjY2NTl9.ZFE2O34gp4eVC5EYGXLA9AYu-mwSEdqggsaHQep3Em8`;
-        const response = await axios.get(baseUrl, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const baseUrl = `/api/v1/categories/${id}`;
+        const response = await axios.get(baseUrl);
 
         if (response.status < 200 || response.status >= 300) {
           throw new Error(

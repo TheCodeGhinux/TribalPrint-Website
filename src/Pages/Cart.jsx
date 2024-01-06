@@ -63,13 +63,8 @@ const Cart = () => {
     try {
       setLoading(true);
       setLoading2(true);
-      const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/orders/create`;
-      const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAwNjY2NjU5LCJleHAiOjM2MDAwMDE3MDA2NjY2NTl9.ZFE2O34gp4eVC5EYGXLA9AYu-mwSEdqggsaHQep3Em8`; // Replace with your actual token
-      const response = await axios.post(baseUrl, null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const baseUrl = `/api/v1/carts/orders/create`;
+      const response = await axios.post(baseUrl, null);
 
       if (response.status < 200 || response.status >= 300) {
         throw new Error(`Failed to create order: ${response.statusText}`);

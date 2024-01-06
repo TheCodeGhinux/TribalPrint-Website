@@ -30,7 +30,7 @@ const UploadPage = () => {
   useEffect(() => {
     const fetchSingleProduct = async () => {
       try {
-        const baseUrl = `https://tp-prod.onrender.com/api/v1/categories/${id}`;
+        const baseUrl = `/api/v1/categories/${id}`;
         const response = await axios.get(baseUrl);
 
         if (response.status < 200 || response.status >= 300) {

@@ -21,7 +21,7 @@ export const CartProvider = ({ children }) => {
         if (!userId) {
           throw new Error("user is null or undefined");
         }
-        const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/get/${userId}`;
+        const baseUrl = `/api/v1/carts/get/${userId}`;
         const response = await axios.get(baseUrl);
   
         if (response.status < 200 || response.status >= 300) {

@@ -3,23 +3,25 @@ import styles from "../../style";
 import axios from "axios";
 import { Button } from "../../Utils";
 import { FaSpinner } from "react-icons/fa";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const OrderSummary = () => {
   const [error, setError] = useState(null);
   const [checkoutDetails, setCheckoutDetails] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCheckoutDetails = async () => {
       try {
-        const userId = localStorage.getItem("user");
+        const userId = localStorage.getItem("userId");
 
         if (!userId) {
           throw new Error("user is null or undefined");
         }
         const baseUrl = `/api/v1/carts/get/${userId}`;
         const response = await axios.get(baseUrl);
-        console.log(baseUrl);
 
         if (response.status < 200 || response.status >= 300) {
           throw new Error(
@@ -27,7 +29,7 @@ const OrderSummary = () => {
           );
         }
 
-        setCheckoutDetails(response.data);
+        setCheckoutDetails(response.data.cart);
       } catch (error) {
         setError(error.message || "Error fetching payment methods");
         console.error(error.message);
@@ -58,6 +60,30 @@ const OrderSummary = () => {
     checkoutDetails && checkoutDetails.items ? checkoutDetails.items.length : 0;
   const { totalPrice } = calculateTotal();
 
+  const handleCheckout = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const userId = localStorage.getItem("userId");
+      const baseUrl = `/api/v1/carts/orders/create/${userId}/new`;
+      const response = await axios.post(baseUrl, null);
+
+      if (response.status < 200 || response.status >= 300) {
+        throw new Error(`Failed to create order: ${response.statusText}`);
+      }
+
+      toast.success("Order created successfully!");
+
+      navigate(`/success`);
+    } catch (error) {
+      setError(error.message || "Error creating order");
+      console.error(error.message);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="mt-[170px] ">
       {checkoutDetails && (
@@ -65,26 +91,22 @@ const OrderSummary = () => {
           <h1 className={`${styles.heading2} mb-[46px] md:mb-[64px]`}>
             Order Summary
           </h1>
-          <div>
+          <form onSubmit={handleCheckout}>
+            <div className="border-b pb-6  border-b-[#B6BECD]  flex items-center justify-between gap-6 lg:w-[700px] ">
+              <h2 className="text-black font-bold leading-6 w-fit ">S/N</h2>
+              <h2 className="text-black font-bold leading-6 w-full  ">
+                Product
+              </h2>
+              <h2 className="text-black font-bold leading-6 w-fit ">
+                Quantity
+              </h2>
+              <h2 className="text-black font-bold leading-6 w-fit ">Amount</h2>
+            </div>
             {checkoutDetails &&
             checkoutDetails.items &&
             checkoutDetails.items.length > 0 ? (
               checkoutDetails.items.map((item, index) => (
                 <div>
-                  <div className="border-b pb-6  border-b-[#B6BECD]  flex items-center justify-between gap-6 lg:w-[700px] ">
-                    <h2 className="text-black font-bold leading-6 w-fit ">
-                      S/N
-                    </h2>
-                    <h2 className="text-black font-bold leading-6 w-full  ">
-                      Product
-                    </h2>
-                    <h2 className="text-black font-bold leading-6 w-fit ">
-                      Quantity
-                    </h2>
-                    <h2 className="text-black font-bold leading-6 w-fit ">
-                      Amount
-                    </h2>
-                  </div>
                   <div className="border-b border-b-[#B6BECD] flex items-center px-4 py-6 justify-between gap-6 lg:w-[700px] ">
                     <h2 className="text-[#000] font-normal leading-6 w-fit ">{`${
                       index + 1
@@ -101,7 +123,7 @@ const OrderSummary = () => {
                         {item.product ? item.product.name : ""}
                       </span>
                     </h2>
-                    <h2 className="text-[#000] font-normal leading-6 w-[10%] border ">
+                    <h2 className="text-[#000] font-normal leading-6 w-[10%] ">
                       {item.quantity}
                     </h2>
                     <h2 className="text-[#000] font-normal leading-6 w-fit ">
@@ -127,17 +149,17 @@ const OrderSummary = () => {
             <Button
               title={
                 loading ? (
-                  <FaSpinner className="text-white animate-spin" size={30} />
+                  <FaSpinner className="text-lightGreen animate-spin" size={30} />
                 ) : (
                   "Make Order"
                 )
               }
               type={"submit"}
               classname={
-                " text-lightGreen lg:w-[700px] font-nunito text-lg bg-white border-lightGreen border-2 font-semibold py-[16px] px-[24px] rounded-[4px] w-full "
+                " text-lightGreen lg:w-[700px] font-nunito text-lg bg-white border-lightGreen border-2 font-semibold py-[16px] px-[24px] rounded-[4px] w-full flex items-center justify-center"
               }
             />
-          </div>
+          </form>
         </div>
       )}
     </section>

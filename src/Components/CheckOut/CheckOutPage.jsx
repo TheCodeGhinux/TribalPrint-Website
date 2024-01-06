@@ -17,60 +17,6 @@ const CheckOutPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const fetchCheckoutDetails = async () => {
-  //     try {
-  //       const baseUrl = `https://tp-prod.onrender.com/api/v1/carts/orders/get/${checkoutId}`;
-  //       const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3Vzd3JpdGVzMjAwNDNAZ21haWwuY29tIiwic3ViIjoiNjU1NzdhNzFlYzI2ODEyYTBmYTljMjk2IiwiaWF0IjoxNzAyNzIwMjEzLCJleHAiOjM2MDAwMDE3MDI3MjAyMTN9.RAFjVE_WdKjS9GqkK6Gtt75T9K6GvWki_DOwVHhHXX8`;
-
-  //       const response = await axios.get(baseUrl, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       if (response.status < 200 || response.status >= 300) {
-  //         throw new Error(
-  //           `Failed to fetch checkout details: ${response.statusText}`
-  //         );
-  //       }
-
-  //       setCheckoutDetails(response.data);
-  //     } catch (error) {
-  //       console.error(error.message);
-  //       // Handle error if needed
-  //     }
-  //   };
-
-  //   fetchCheckoutDetails();
-  // }, [checkoutId]);
-
-  const handleCheckout = async () => {
-    try {
-      const userId = localStorage.getItem("user");
-     
-      if (!userId) {
-        throw new Error("user is null or undefined");
-      }
-      const baseUrl = `/api/v1/carts/orders/create/${userId}/new`;
-      const response = await axios.post(baseUrl, null);
-
-      if (response.status < 200 || response.status >= 300) {
-        throw new Error(`Failed to create order: ${response.statusText}`);
-      }
-
-      toast.success("Order created successfully!");
-      const checkoutId = response.data._id;
-      // setCart(null);
-      // navigate(`/checkout/${checkoutId}`);
-    } catch (error) {
-      setError(error.message || "Error creating order");
-      console.error(error.message);
-      toast.error(error.message);
-    } finally {
-    }
-  };
-
   const createUser = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -121,7 +67,7 @@ const CheckOutPage = () => {
     <div className="mt-[170px]">
       <div className={`${styles.boxWidth}  ${styles.paddingX} `}>
         <h1 className={`${styles.heading1} mb-[46px] md:mb-[64px]`}>
-  tex        Check Out
+      Check Out
         </h1>
         <div className="flex flex-col md:flex-row md:gap-[32px]  ">
           <form className="w-full" onSubmit={createUser}>

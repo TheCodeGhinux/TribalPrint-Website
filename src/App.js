@@ -11,6 +11,7 @@ import {
   PrivacyPolicy,
   SignIn,
   SignUp,
+  Success,
   TermsCondition,
 } from "./Pages";
 import ScrollToTop from "./Components/ScrollToTop";
@@ -36,14 +37,16 @@ const App = () => {
           localStorage.setItem("guestCartCookie", cookie);
         }
     
-        console.log("Full Response:", response);
-    
-        const { user, _id, visitorId } = response.data;
+        const { user, _id, visitorId, userId } = response.data.data;
+        const { isUser} = response.data.cart;
+        
+        localStorage.setItem("isUser", isUser);
+
         localStorage.setItem("user", user);
         localStorage.setItem("_id", _id);
         localStorage.setItem("visitorId", visitorId);
-    
-        console.log("Guest Cart Created:", response.data);
+        localStorage.setItem("userId", userId);
+
       } catch (error) {
         console.error("Error creating guest cart:", error.message);
       }
@@ -85,6 +88,10 @@ const App = () => {
               <Route
                 path="/order"
                 element={<OrderDetail />}
+              />
+               <Route
+                path="/success"
+                element={<Success />}
               />
               <Route path="/checkout" element={<CheckOut />} />
             </Routes>

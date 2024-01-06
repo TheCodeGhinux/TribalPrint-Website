@@ -34,7 +34,7 @@ const CartItem = ({
 
       toast.success("Item removed successfully!");
 
-      const userId = localStorage.getItem("user");
+      const userId = localStorage.getItem("userId");
      
       if (!userId) {
         throw new Error("user is null or undefined");
@@ -48,7 +48,7 @@ const CartItem = ({
         throw new Error(`Failed to fetch updated cart data: ${updatedCartResponse.statusText}`);
       }
 
-      setCart(updatedCartResponse.data);
+      setCart(updatedCartResponse.data.cart);
     } catch (error) {
       setError(error.message || "Error removing item");
       console.error(error.message);

@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../Utils";
 import styles from "../../style";
-import { FaSpinner } from "react-icons/fa";
 
 const TotalCart = ({ product, price, handleCheckout, loading }) => {
+  const isUser = localStorage.getItem("isUser");
   return (
     <section>
       <div className="bg-[#F2F2F2] w-full lg:w-[416px] lg:h-[312px] p-6 flex flex-col gap-6 ">
@@ -18,17 +18,28 @@ const TotalCart = ({ product, price, handleCheckout, loading }) => {
         <hr className="border-t border-t-[#BDBDBD]  " />
         <p>{product} Product(s)</p>
         <div className="flex mx-auto w-full lg:mx-0 flex-col gap-4 ">
-          <div className="w-full">
-          <Button
-              type={"button"}
-              classname={`bg-skyBlueText flex items-center justify-center py-[16px] rounded-[4px] text-white w-full ${styles.image} `}
-              title={loading ? (
-                  <FaSpinner className="text-white animate-spin  " size={20} />
-                ) : (
+        <div className="w-full">
+           {isUser ? (
+            <Link to={"/order"}>
+              <Button
+                type={"button"}
+                classname={`bg-skyBlueText flex items-center justify-center py-[16px] rounded-[4px] text-white w-full ${styles.image} `}
+                title={
                   "Checkout Now"
-                )}
-              onClick={handleCheckout}
-            />
+                }
+              />
+            </Link>
+          ) : (
+            <Link to={"/checkout"}>
+              <Button
+                type={"button"}
+                classname={`bg-skyBlueText flex items-center justify-center py-[16px] rounded-[4px] text-white w-full ${styles.image} `}
+                title={
+                  "Checkout Now"
+                }
+              />
+            </Link>
+          )}
           </div>
           <div className="w-full">
             <Link to={"/all-products"}>

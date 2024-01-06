@@ -105,13 +105,13 @@ const Modal = ({
       const baseUrl = `/api/v1`;
 
       // Retrieve visitorId from localStorage
-      const user = localStorage.getItem("_id");
+      const userId = localStorage.getItem("userId");
      
-      if (!user) {
+      if (!userId) {
         throw new Error("user is null or undefined");
       }
 
-      const cartEndpoint = `${baseUrl}/carts/add/${user}`;
+      const cartEndpoint = `${baseUrl}/carts/add/${userId}`;
 
       const data = {
         product: productId,

@@ -10,9 +10,12 @@ import UploadProduct from "./UploadProduct"
 import OrderDetail from "./OrderDetail";
 import CheckOut from "./CheckOut";
 import Cart from "./Cart";
+import Success from "./Success";
+
 
 
 export {
+    Success,
     CheckOut,
     Banner,
     UploadProduct,

@@ -14,18 +14,18 @@ const Cart = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
+  const isUser = localStorage.getItem("isUser");
 
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const userId = localStorage.getItem("user");
+        const userId = localStorage.getItem("userId");
 
         if (!userId) {
           throw new Error("user is null or undefined");
         }
         const baseUrl = `/api/v1/carts/get/${userId}`;
         const response = await axios.get(baseUrl);
-        console.log(baseUrl);
 
         if (response.status < 200 || response.status >= 300) {
           throw new Error(
@@ -33,7 +33,7 @@ const Cart = () => {
           );
         }
 
-        setCart(response.data);
+        setCart(response.data.cart);
       } catch (error) {
         setError(error.message || "Error fetching payment methods");
         console.error(error.message);
@@ -149,23 +149,35 @@ const Cart = () => {
       {cart && cart.items && cart.items.length > 0 && (
         <div className="hidden md:flex w-[85%] md:w-[540px] lg:w-[864px] mx-0 flex-col md:flex-row gap-[16px] md:gap-[32px] ">
           <div className="w-full">
+           {isUser ? (
+            <Link to={"/order"}>
+              <Button
+                type={"button"}
+                classname={`bg-skyBlueText flex items-center justify-center py-[16px] rounded-[4px] text-white w-full ${styles.image} `}
+                title={
+                  loading2 ? (
+                    <FaSpinner className="text-white animate-spin" size={20} />
+                  ) : (
+                    "Checkout Now"
+                  )
+                }
+              />
+            </Link>
+          ) : (
             <Link to={"/checkout"}>
               <Button
                 type={"button"}
                 classname={`bg-skyBlueText flex items-center justify-center py-[16px] rounded-[4px] text-white w-full ${styles.image} `}
                 title={
                   loading2 ? (
-                    <FaSpinner
-                      className="text-white animate-spin  "
-                      size={20}
-                    />
+                    <FaSpinner className="text-white animate-spin" size={20} />
                   ) : (
                     "Checkout Now"
                   )
                 }
-                // onClick={handleCheckout}
               />
             </Link>
+          )}
           </div>
           <div className="w-full">
             <Link to={"/all-products"}>

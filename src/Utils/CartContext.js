@@ -16,7 +16,7 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const userId = localStorage.getItem("user");
+        const userId = localStorage.getItem("userId");
 
         if (!userId) {
           throw new Error("user is null or undefined");
@@ -32,7 +32,7 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem("cart", JSON.stringify(response.data));
   
         // Set cart data
-        setCart(response.data);
+        setCart(response.data.cart);
       } catch (error) {
         setError(error.message || "Error fetching cart data");
         console.error(error.message);

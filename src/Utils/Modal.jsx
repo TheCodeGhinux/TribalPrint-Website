@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaSpinner } from "react-icons/fa";
+import $http from "../api/axios";
 
 const Modal = ({
   onClose,
@@ -52,11 +53,12 @@ const Modal = ({
       if (validFiles.length > 0) {
         try {
           setLoadingUpload(true);
-          const baseUrl = `/api/v1`;
+          const baseUrl = `https://tp-prod.onrender.com/api/v1`
           const designUploadEndpoint = `${baseUrl}/design/upload`;
           const formData = new FormData();
           formData.append("design", validFiles[0]);
 
+          console.log(formData)
           const uploadResponse = await axios.post(
             designUploadEndpoint,
             formData
@@ -111,7 +113,7 @@ const Modal = ({
         throw new Error("user is null or undefined");
       }
 
-      const cartEndpoint = `${baseUrl}/carts/add/${userId}`;
+      const cartEndpoint = `/carts/add/${userId}`;
 
       const data = {
         product: productId,
@@ -121,7 +123,7 @@ const Modal = ({
         additionalProps: selectedProps,
       };
 
-      const response = await axios.patch(cartEndpoint, data);
+      const response = await $http.patch(cartEndpoint, data);
 
       if (response.status) {
         toast.success("Items added to cart successfully!", {

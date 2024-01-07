@@ -7,6 +7,7 @@ import styles from "../../style";
 import FilterContainer from "../FilterContainer";
 import ProductContainer from "../Home/ProductContainer";
 import axios from "axios";
+import $http from "../../api/axios";
 
 const Products = () => {
   const [categories, setCategories] = useState(null);
@@ -16,8 +17,13 @@ const Products = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const baseUrl = `/api/v1/categories`;
-        const response = await axios.get(baseUrl, {
+        const baseUrl = `/categories`;
+        // const response = await axios.get(baseUrl, {
+        //   params: {
+        //     search: searchTerm
+        //   },
+        // });
+        const response = await $http.get(baseUrl, {
           params: {
             search: searchTerm
           },

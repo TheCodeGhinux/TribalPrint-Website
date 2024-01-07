@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
+import $http from "../../api/axios";
 
 const UploadPage = () => {
   const [quantity, setQuantity] = useState(1);
@@ -30,8 +31,9 @@ const UploadPage = () => {
   useEffect(() => {
     const fetchSingleProduct = async () => {
       try {
-        const baseUrl = `/api/v1/categories/${id}`;
-        const response = await axios.get(baseUrl);
+        const baseUrl = `/categories/${id}`;
+        // const response = await axios.get(baseUrl);
+        const response = await $http.get(baseUrl)
 
         if (response.status < 200 || response.status >= 300) {
           throw new Error(

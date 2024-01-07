@@ -6,6 +6,7 @@ import BannerContainer from "./BannerContainer";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Hero from "./Hero";
+import $http from "../../api/axios";
 
 const BannerDetails = () => {
   const { id } = useParams();
@@ -16,8 +17,10 @@ const BannerDetails = () => {
   useEffect(() => {
     const fetchProductsByCategory = async () => {
       try {
-        const baseUrl = `/api/v1/categories/${id}`;
-        const response = await axios.get(baseUrl);
+        const baseUrl = `/categories/${id}`;
+        // const response = await axios.get(baseUrl);
+        const response = await $http.get(baseUrl);
+        
 
         if (response.status < 200 || response.status >= 300) {
           throw new Error(

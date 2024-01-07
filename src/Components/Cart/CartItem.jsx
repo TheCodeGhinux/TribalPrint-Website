@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { FaSpinner } from "react-icons/fa";
+import $http from "../../api/axios";
 
 const CartItem = ({
   quantity,
@@ -23,11 +24,13 @@ const CartItem = ({
   const handleDelete = async () => {
     try {
       setLoading(true);
-      const baseUrl = `/api/v1/carts/guest/remove`;
+      const baseUrl = `/carts/guest/remove`;
 
       const itemIds = [cartId];
 
-      const response = await axios.patch(baseUrl, { itemIds });
+      // const response = await axios.patch(baseUrl, { itemIds });
+      const response = await $http.patch(baseUrl, { itemIds })
+      
       if (response.status < 200 || response.status >= 300) {
         throw new Error(`Failed to remove item: ${response.statusText}`);
       }
@@ -40,9 +43,10 @@ const CartItem = ({
         throw new Error("user is null or undefined");
       }
       // Fetch updated cart data after deletion
-      const updatedCartResponse = await axios.get(
-        `/api/v1/carts/get/${userId}`
-      );
+      // const updatedCartResponse = await axios.get(
+      //   `/api/v1/carts/get/${userId}`
+      // );
+      const updatedCartResponse = await $http.get(`/carts/get/${userId}`)
 
       if (updatedCartResponse.status < 200 || updatedCartResponse.status >= 300) {
         throw new Error(`Failed to fetch updated cart data: ${updatedCartResponse.statusText}`);
